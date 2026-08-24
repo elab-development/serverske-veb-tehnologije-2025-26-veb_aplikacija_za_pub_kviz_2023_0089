@@ -63,4 +63,26 @@ class SeasonController extends Controller
             'message' => 'Sezona je uspesno obrisana.',
         ], 200);
     }
+        public function scoreboard(Season $season)
+    {
+        $teams = $season->teams()
+            ->withSum('results as ukupno_poena', 'points')
+            ->withCount('results as odigrano_dogadjaja')
+            ->orderByDesc('ukupno_poena')
+            ->get()
+            ->map(function ($team, $index) {
+                return [
+                    'pozicija' => $index + 1,
+                    'tim' => $team->name,
+                    'ukupno_poena' => $team->ukupno_poena ?? 0,
+                    'odigrano_dogadjaja' => $team->odigrano_dogadjaja,
+                ];
+            });
+
+        return response()->json([
+            'sezona' => $season->name,
+            'broj_timova' => $teams->count(),
+            'tabela' => $teams,
+        ], 200);
+    }
 }
