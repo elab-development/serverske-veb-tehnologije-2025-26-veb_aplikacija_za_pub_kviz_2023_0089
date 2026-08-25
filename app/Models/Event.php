@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable = ['season_id', 'name', 'event_date'];
+    protected $fillable = ['season_id', 'name', 'event_date', 'location', 'winner_team_id'];
 
     public function season()
     {
@@ -16,5 +16,9 @@ class Event extends Model
     public function results()
     {
         return $this->hasMany(Result::class);
+    }
+        public function winner()
+    {
+        return $this->belongsTo(Team::class, 'winner_team_id');
     }
 }
