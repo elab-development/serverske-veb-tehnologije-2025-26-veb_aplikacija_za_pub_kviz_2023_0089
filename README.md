@@ -6,8 +6,8 @@ Seminarski rad iz predmeta Serverske veb tehnologije.
 Aplikacija služi za organizaciju i praćenje pub kviza. Vodi se evidencija sezona, timovi se registruju, a rang lista se automatski ažurira nakon svakog održanog događaja.
 
 ## Članovi tima
-- Andrija Zečević, 2023/0089
-- [Ime Prezime drugara], [broj indeksa drugara]
+- Filip Popović, 2023/0089
+- Andrija Zečević, 2023/0045
 
 ## Tehnologije
 - Laravel (PHP)
