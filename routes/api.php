@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TeamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -16,6 +17,7 @@ Route::get('/seasons/{season}/scoreboard', [SeasonController::class, 'scoreboard
 Route::apiResource('seasons', SeasonController::class)->only(['index', 'show']);
 Route::apiResource('events', EventController::class)->only(['index', 'show']);
 Route::apiResource('results', ResultController::class)->only(['index', 'show']);
+Route::apiResource('teams', TeamController::class)->only(['index', 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -27,4 +29,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('seasons', SeasonController::class)->except(['index', 'show']);
     Route::apiResource('events', EventController::class)->except(['index', 'show']);
     Route::apiResource('results', ResultController::class)->except(['index', 'show']);
-});
+    Route::apiResource('teams', TeamController::class)->except(['index', 'show']);
+    });
