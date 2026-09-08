@@ -26,8 +26,13 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json($request->user());
     });
 
-    Route::apiResource('seasons', SeasonController::class)->except(['index', 'show']);
-    Route::apiResource('events', EventController::class)->except(['index', 'show']);
+    // Ulogovan korisnik: upisuje i menja rezultate, registruje timove
     Route::apiResource('results', ResultController::class)->except(['index', 'show']);
     Route::apiResource('teams', TeamController::class)->except(['index', 'show']);
+
+    // Samo administrator: upravlja sezonama i dogadjajima
+    Route::middleware('admin')->group(function () {
+        Route::apiResource('seasons', SeasonController::class)->except(['index', 'show']);
+        Route::apiResource('events', EventController::class)->except(['index', 'show']);
     });
+});
