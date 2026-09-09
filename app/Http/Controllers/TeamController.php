@@ -10,9 +10,39 @@ class TeamController extends Controller
     /**
      * Vraća sve timove zajedno sa sezonom kojoj pripadaju.
      */
-    public function index()
+       public function index(Request $request)
     {
-        $teams = Team::with('season')->get();
+        $upit = Team::with('season');
+
+        if ($request->filled('pretraga')) {
+            $tekst = $request->pretraga;
+
+            $upit->where(function ($q) use ($tekst) {
+                $q->where('name', 'like', '%' . $tekst . '%')
+                  ->orWhere('contact_email', 'like', '%' . $tekst . '%');
+            });
+        }
+
+        if ($request->filled('season_id')) {
+            $upit->where('season_id', $request->season_id);
+        }
+
+        $kolona = $request->input('sortiraj_po', 'name');
+        $smer = $request->input('smer', 'asc');
+
+        $dozvoljeneKolone = ['name', 'contact_email', 'created_at'];
+        $dozvoljeniSmerovi = ['asc', 'desc'];
+
+        if (!in_array($kolona, $dozvoljeneKolone)) {
+            $kolona = 'name';
+        }
+
+        if (!in_array($smer, $dozvoljeniSmerovi)) {
+            $smer = 'asc';
+        }
+
+        $teams = $upit->orderBy($kolona, $smer)->paginate(10);
+
         return response()->json($teams, 200);
     }
 
