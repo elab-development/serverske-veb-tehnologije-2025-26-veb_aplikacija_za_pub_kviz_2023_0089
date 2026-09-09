@@ -85,4 +85,42 @@ class SeasonController extends Controller
             'tabela' => $teams,
         ], 200);
     }
+        public function exportScoreboard(Season $season)
+    {
+        $teams = $season->teams()
+            ->withSum('results as ukupno_poena', 'points')
+            ->withCount('results as odigrano_dogadjaja')
+            ->orderByDesc('ukupno_poena')
+            ->get();
+
+        $nazivFajla = 'rang-lista-' . str_replace(['/', ' '], '-', $season->name) . '.csv';
+
+        $zaglavlja = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $nazivFajla . '"',
+        ];
+
+        $callback = function () use ($teams, $season) {
+            $fajl = fopen('php://output', 'w');
+
+            fwrite($fajl, "\xEF\xBB\xBF");
+
+            fputcsv($fajl, ['Rang lista - ' . $season->name], ';');
+            fputcsv($fajl, [], ';');
+            fputcsv($fajl, ['Pozicija', 'Tim', 'Ukupno poena', 'Odigrano dogadjaja'], ';');
+
+            foreach ($teams as $index => $team) {
+                fputcsv($fajl, [
+                    $index + 1,
+                    $team->name,
+                    $team->ukupno_poena ?? 0,
+                    $team->odigrano_dogadjaja,
+                ], ';');
+            }
+
+            fclose($fajl);
+        };
+
+        return response()->stream($callback, 200, $zaglavlja);
+    }
 }

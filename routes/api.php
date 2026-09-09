@@ -14,6 +14,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/events/upcoming', [EventController::class, 'upcoming']);
 Route::get('/seasons/{season}/scoreboard', [SeasonController::class, 'scoreboard']);
+Route::get('/seasons/{season}/scoreboard/export', [SeasonController::class, 'exportScoreboard']);
 Route::get('/questions', [QuestionController::class, 'index']);
 
 Route::apiResource('seasons', SeasonController::class)->only(['index', 'show']);
